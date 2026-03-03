@@ -110,3 +110,63 @@ for nom, matieres in notes_par_etudiant.items():
     moyennes_etudiants[nom]["generale"] = avg
     pass
 
+
+alertes = [] 
+
+for nom, matieres in notes_par_etudiant.items():
+    toutes_les_notes = []
+
+    if len(matieres) < len(matieres_distinctes):
+        alertes.append({
+            "type": "Profil incomplet", 
+            "cible": nom, 
+            "description": "Manque des matieres"
+        })
+
+    for matiere, liste_notes in matieres.items():
+        toutes_les_notes.extend(liste_notes)
+        if len(liste_notes) > 1:
+            alertes.append({
+                "type": "Notes multiples", 
+                "cible": f"{nom} ({matiere})", 
+                "description": "Trop de notes"
+            })
+
+    if len(toutes_les_notes) > 1:
+        note_max = max(toutes_les_notes)
+        note_min = min(toutes_les_notes)
+        ecart = note_max - note_min
+        
+        if ecart >= 8: 
+            alertes.append({
+                "type": "Ecart important", 
+                "cible": nom, 
+                "description": "Notes tres instables"
+            })
+
+seuil_critique = 10.0 
+for groupe, etudiants in groupes_etudiants.items():
+    somme_groupe = 0
+    nb_etudiants = 0
+    
+    for etudiant in etudiants:
+        if etudiant in moyennes_etudiants:
+            somme_groupe += moyennes_etudiants[etudiant]["generale"]
+            nb_etudiants += 1
+            
+    if nb_etudiants > 0:
+        moyenne_groupe = somme_groupe / nb_etudiants
+        if moyenne_groupe < seuil_critique:
+            alertes.append({
+                "type": "Groupe faible", 
+                "cible": groupe, 
+                "description": "Moyenne trop basse"
+            })
+
+
+print("ALERTES")
+for alerte in alertes:
+    t = alerte.get("type")
+    c = alerte.get("cible")
+    d = alerte.get("description")
+    print(f"[{t}] {c} : {d}")
