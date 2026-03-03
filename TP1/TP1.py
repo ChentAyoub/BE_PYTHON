@@ -78,5 +78,35 @@ for enregistrement in valides:
 
     if groupe not in groupes_etudiants:
         groupes_etudiants[groupe] = set()
-        
+
     groupes_etudiants[groupe].add(nom)
+
+
+def somme_recursive(liste_notes):
+    if len(liste_notes) == 0:
+        return 0
+    return liste_notes[0] + somme_recursive(liste_notes[1:])
+
+
+def moyenne(liste_notes):
+    if len(liste_notes) == 0:
+        return 0
+    return somme_recursive(liste_notes) / len(liste_notes)
+
+
+moyennes_etudiants = {}
+
+for nom, matieres in notes_par_etudiant.items():
+    moyennes_etudiants[nom] = {"generale": 0, "par_matiere": {}}
+    toutes_les_notes_etudiant = []
+    
+    for matiere, liste_notes in matieres.items():
+        moy=moyenne(liste_notes)
+        moyennes_etudiants[nom]["par_matiere"][matiere]=moy
+
+        toutes_les_notes_etudiant.extend(liste_notes)
+
+    avg = moyenne(toutes_les_notes_etudiant)
+    moyennes_etudiants[nom]["generale"] = avg
+    pass
+
