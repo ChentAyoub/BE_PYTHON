@@ -32,7 +32,7 @@ def valider(enregistrement):
         pass
         
     except ValueError:
-        return False, "La note n'est pas un nombre valide"
+        return False, "La note n est pas un nombre valide"
         
     except TypeError:
          return False, "La note est invalide"
@@ -73,8 +73,10 @@ for enregistrement in valides:
         
     if matiere not in notes_par_etudiant[nom]:
         notes_par_etudiant[nom][matiere] = []
-        notes_par_etudiant[nom][matiere].append(note)
+
+    notes_par_etudiant[nom][matiere].append(note)
 
     if groupe not in groupes_etudiants:
         groupes_etudiants[groupe] = set()
-        groupes_etudiants[groupe].add(nom)
+        
+    groupes_etudiants[groupe].add(nom)
